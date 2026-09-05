@@ -4,12 +4,16 @@ import os
 
 ver = None
 
-versionPath = os.path.dirname(sys.argv[0]) + "/version.txt"
+script_dir = os.path.dirname(os.path.abspath(__file__))
+versionPath = os.path.join(script_dir, "version.txt")
+
 if os.path.exists(versionPath):
     with open(versionPath, "r", encoding="utf8") as fp:
         ver = fp.read()
 else:
-    ver = subprocess.run(["git", "describe", "--tags", "--dirty"], capture_output=True, text=True).stdout or "UNKNOWN-" + subprocess.run(["git", "describe", "--always", "--dirty"], capture_output=True, text=True).stdout or "UNKNOWN"
+    ver = subprocess.run(["git", "describe", "--tags", "--dirty"], capture_output=True, text=True).stdout \
+        or "UNKNOWN-" + subprocess.run(["git", "describe", "--always", "--dirty"], capture_output=True, text=True).stdout \
+        or "UNKNOWN"
 
 ver = ver.strip()
 if ver[0] == "v":
